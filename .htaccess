@@ -23,7 +23,7 @@ Options -Indexes
 	# RewriteCond %{HTTP_HOST} ^www.example.org [NC]
  	# RewriteRule ^(.*)$ http://example.org/$1 [R=301,L]
 
-	RewriteBase /%siteurlhere%/
+	RewriteBase /
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^(.*)$ index.php [QSA,L]
@@ -32,8 +32,8 @@ Options -Indexes
 	# Redirect 301 /index http://example.org/
 </IfModule>
 
-# Prevent visitors from viewing our MD and TXT files directly.
-<FilesMatch "(^#.*#|\.(md|txt)|~)$">
+# Prevent visitors from viewing our MD, TXT, HTML and TPL files directly.
+<FilesMatch "(^#.*#|\.(md|txt|html|tpl)|~)$">
 	Order allow,deny
 	Deny from all
 	Satisfy All

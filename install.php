@@ -7,11 +7,15 @@
 // Get array with the names of all modules compiled and loaded
 $php_modules = get_loaded_extensions();
 
-// Get server port    
-if ($_SERVER["SERVER_PORT"] == "80") $port = ""; else $port = ':'.$_SERVER["SERVER_PORT"];
+// Get server port
+if ($_SERVER["SERVER_PORT"] == "80") {
+    $port = "";
+} else {
+    $port = ':' . $_SERVER["SERVER_PORT"];
+}
 
 // Get site URL
-$site_url = 'http://'.$_SERVER["SERVER_NAME"].$port.str_replace(array("index.php", "install.php"), "", $_SERVER['PHP_SELF']);
+$site_url = 'http://' . $_SERVER["SERVER_NAME"] . $port . str_replace(array("index.php", "install.php"), "", $_SERVER['PHP_SELF']);
 
 // Replace last slash in site_url
 $site_url = rtrim($site_url, '/');
@@ -30,15 +34,14 @@ if (version_compare(PHP_VERSION, "5.3.0", "<")) {
 }
 
 if (function_exists('apache_get_modules')) {
-    if ( ! in_array('mod_rewrite', apache_get_modules())) {
+    if (!in_array('mod_rewrite', apache_get_modules())) {
         $errors['mod_rewrite'] = 'error';
-    } 
+    }
 }
 
 if (!is_writable(__FILE__)) {
     $errors['install'] = 'error';
 }
-
 
 if (!is_writable('.htaccess')) {
     $errors['htaccess'] = 'error';
@@ -46,7 +49,7 @@ if (!is_writable('.htaccess')) {
 
 // Dirs 'public', 'storage', 'backups', 'tmp'
 foreach ($dir_array as $dir) {
-    if (!is_writable($dir.'/')) {
+    if (!is_writable($dir . '/')) {
         $errors[$dir] = 'error';
     }
 }
@@ -54,41 +57,41 @@ foreach ($dir_array as $dir) {
 // If pressed <Install> button then try to install
 if (isset($_POST['install_submit'])) {
 
-    	$post_site_url = isset($_POST['site_url']) ? $_POST['site_url'] : '';
-    	$post_site_timezone = isset($_POST['site_timezone']) ? $_POST['site_timezone'] : '';
-    	$post_site_title = isset($_POST['site_title']) ? $_POST['site_title'] : '';
-    	$post_site_description = isset($_POST['site_description']) ? $_POST['site_description'] : '';
-    	$post_site_keywords = isset($_POST['site_keywords']) ? $_POST['site_keywords'] : '';
-    	$post_email = isset($_POST['email']) ? $_POST['email'] : '';
+    $post_site_url         = isset($_POST['site_url']) ? $_POST['site_url'] : '';
+    $post_site_timezone    = isset($_POST['site_timezone']) ? $_POST['site_timezone'] : '';
+    $post_site_title       = isset($_POST['site_title']) ? $_POST['site_title'] : '';
+    $post_site_description = isset($_POST['site_description']) ? $_POST['site_description'] : '';
+    $post_site_keywords    = isset($_POST['site_keywords']) ? $_POST['site_keywords'] : '';
+    $post_email            = isset($_POST['email']) ? $_POST['email'] : '';
 
-    	file_put_contents('config.php', "<?php
-    return array(
-        'site_url' => '{$post_site_url}',
-        'site_charset' => 'UTF-8',
-        'site_timezone' => '{$post_site_timezone}',
-        'site_theme' => 'default',
-        'site_title' => '{$post_site_title}',
-        'site_description' => '{$post_site_description}',
-        'site_keywords' => '{$post_site_keywords}',
-        'email' => '{$post_email}',
-        'plugins' => array(
-            'markdown',
-            'sitemap',
-        ),
-    );
-  		");
+    file_put_contents('config.php', "<?php
+return array(
+    'site_url'         => '{$post_site_url}',
+    'site_charset'     => 'UTF-8',
+    'site_timezone'    => '{$post_site_timezone}',
+    'site_theme'       => 'default',
+    'site_title'       => '{$post_site_title}',
+    'site_description' => '{$post_site_description}',
+    'site_keywords'    => '{$post_site_keywords}',
+    'email'            => 'admin@admin.com',
+    'plugins'          => array(
+        'markdown',
+        'sitemap',
+    ),
+    // 'templater'        => 'fenom',
+);");
 
-      	// Write .htaccess
-        $htaccess = file_get_contents('.htaccess');
-        $save_htaccess_content = str_replace("/%siteurlhere%/", $rewrite_base, $htaccess);
+    // Write .htaccess
+    $htaccess              = file_get_contents('.htaccess');
+    $save_htaccess_content = str_replace("/%siteurlhere%/", $rewrite_base, $htaccess);
 
-        $handle = fopen ('.htaccess', "w");
-        fwrite($handle, $save_htaccess_content);
-        fclose($handle);
+    $handle = fopen('.htaccess', "w");
+    fwrite($handle, $save_htaccess_content);
+    fclose($handle);
 
-        // Installation done :)
-        header("location: index.php?install=done");
-   
+    // Installation done :)
+    header("location: index.php?install=done");
+
 }
 ?>
 <!DOCTYPE html>
@@ -98,18 +101,18 @@ if (isset($_POST['install_submit'])) {
     <title>Morfy Installer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
-    <link href="<?php echo $site_url; ?>/themes/default/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?php echo $site_url;?>/themes/default/assets/css/bootstrap.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900,400italic' type='text/css' rel='stylesheet' />
-    <link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>	
-    <script src="<?php echo $site_url; ?>/themes/default/assets/js/jquery.min.js"></script>
-    <script src="<?php echo $site_url; ?>/themes/default/assets/js/bootstrap.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
+    <script src="<?php echo $site_url;?>/themes/default/assets/js/jquery.min.js"></script>
+    <script src="<?php echo $site_url;?>/themes/default/assets/js/bootstrap.min.js"></script>
 	<style>
 		.container {
 			max-width: 600px;
 			margin-bottom: 40px;
 		}
 		body {
-	        font-family: "Source Sans Pro","Helvetica","Arial",sans-serif;        
+	        font-family: "Source Sans Pro","Helvetica","Arial",sans-serif;
 	        font-size: 16px;
 	        line-height: 26px;
 	        color: #333;
@@ -144,12 +147,6 @@ if (isset($_POST['install_submit'])) {
 			});
 		});
 	</script>
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
     <div class="container">
@@ -159,52 +156,53 @@ if (isset($_POST['install_submit'])) {
  			<ul class="list-unstyled">
             <?php
 
-                if (version_compare(PHP_VERSION, "5.3.0", "<")) {
-                    echo '<li class="error">PHP 5.3 or greater is required</li>';
-                } else {
-                    echo '<li class="ok">PHP Version '.PHP_VERSION.'</li>';
-                }
+if (version_compare(PHP_VERSION, "5.3.0", "<")) {
+    echo '<li class="error">PHP 5.3 or greater is required</li>';
+} else {
+    echo '<li class="ok">PHP Version ' . PHP_VERSION . '</li>';
+}
 
-                if (function_exists('apache_get_modules')) {
-                    if ( ! in_array('mod_rewrite',apache_get_modules())) {
-                        echo '<li class="error">Apache Mod Rewrite is required</li>';
-                    } else {
-                        echo '<li class="ok">Module Mod Rewrite is installed</li>';
-                    }
-                } else {
-                    echo '<li class="ok">Module Mod Rewrite is installed</li>';
-                }
+if (function_exists('apache_get_modules')) {
+    if (!in_array('mod_rewrite', apache_get_modules())) {
+        echo '<li class="error">Apache Mod Rewrite is required</li>';
+    } else {
+        echo '<li class="ok">Module Mod Rewrite is installed</li>';
+    }
+} else {
+    echo '<li class="ok">Module Mod Rewrite is installed</li>';
+}
 
-                foreach ($dir_array as $dir) {
-                    if (is_writable($dir.'/')) {
-                        echo '<li class="ok">Directory: <b> '.$dir.' </b> writable</li>';
-                    } else {
-                        echo '<li class="error">Directory: <b> '.$dir.' </b> not writable</li>';
-                    }
-                }
+foreach ($dir_array as $dir) {
+    if (is_writable($dir . '/')) {
+        echo '<li class="ok">Directory: <b> ' . $dir . ' </b> writable</li>';
+    } else {
+        echo '<li class="error">Directory: <b> ' . $dir . ' </b> not writable</li>';
+    }
+}
 
-                if (is_writable(__FILE__)) {
-                    echo '<li class="ok">Install script writable</li>';
-                } else {
-                    echo '<li class="error">Install script not writable</li>';
-                }
+if (is_writable(__FILE__)) {
+    echo '<li class="ok">Install script writable</li>';
+} else {
+    echo '<li class="error">Install script not writable</li>';
+}
 
-                if (is_writable('.htaccess')) {
-                    echo '<li class="ok">Main .htaccess file writable.</li>';
-                } else {
-                    echo '<li class="error">Main .htaccess file not writable.</li>';
-                }
-            ?>
+if (is_writable('.htaccess')) {
+    echo '<li class="ok">Main .htaccess file writable.</li>';
+} else {
+    echo '<li class="error">Main .htaccess file not writable.</li>';
+}
+?>
             </ul>
             <?php
-				if (count($errors) == 0) {
-			?>
+if (count($errors) == 0) {
+    ?>
 				<a class="btn btn-primary continue form-control">Continue</a>
 			<?php
-				} else {
-            ?>
+} else {
+    ?>
             <a class="btn btn-disabled form-control" disabled>Continue</a>
-            <?php } ?>
+            <?php }
+?>
 		</div>
 
 		<div class="step-2 hide">
@@ -223,7 +221,7 @@ if (isset($_POST['install_submit'])) {
 		  </div>
 		  <div class="form-group">
 		    <label for="site_url">Site Url</label>
-		    <input type="text" name="site_url" class="form-control" id="site_url" placeholder="Enter Site Url" value="<?php echo $site_url; ?>" required>
+		    <input type="text" name="site_url" class="form-control" id="site_url" placeholder="Enter Site Url" value="<?php echo $site_url;?>" required>
 		  </div>
 		  <div class="form-group">
 		    <label for="email">Email</label>

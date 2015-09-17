@@ -2,6 +2,7 @@
 <?php include 'navbar.html' ?>
 <div class="container">
     <?php Morfy::factory()->runAction('theme_content_before'); ?>
+    
     <?php echo $page['content']; ?>
     <?php Morfy::factory()->runAction('theme_content_after'); ?>
 </div>
