@@ -1,5 +1,5 @@
 Title: Hello
-Date: 12.09.2015
+Date: 2015-09-01 16:08
 Template: blog_post
 
 ----
