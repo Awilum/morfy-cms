@@ -43,4 +43,8 @@ $fenom->addAccessorSmart('config', 'site_config', Fenom::ACCESSOR_PROPERTY);
 $fenom->site_config = $config;
 
 // Display page
-$fenom->display($template . '.tpl', $page);
+try {
+    $fenom->display($template . '.tpl', $page);
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
